@@ -1,5 +1,5 @@
 /*
-
+arduino micro
 */
 #define TriggerPin 1
 #define SelectorSensorPin 3
