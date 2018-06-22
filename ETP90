@@ -1,0 +1,77 @@
+/*
+
+*/
+#define TriggerPin 1
+#define SelectorSensorPin 3
+#define PistonSensorPin 5
+#define FirePin 8
+#define Semi 1
+#define ThreeBurst 3
+#define FiveBurst 5
+#define TenBurst 10
+int SelectorMode = 0;//fire mode is 0,setting mode is 1
+int ModeCount = 0;//0 is semiauto,1 is 3burst,2 is 5burst,3 is 10burst
+int FireMode = 0;
+int FireCount;
+int FireCount_X = 0;
+void setup() {
+  pinMode(TriggerPin,INPUT); 
+  pinMode(SelectorSensorPin,INPUT);
+  pinMode(PistonSensorPin,INPUT);
+  pinMode(FirePin,OUTPUT);
+  }
+
+void loop() {
+  if(digitalRead(SelectorSensorPin) == HIGH){
+    if(SelectorMode == 0){
+      SelectorMode = 1;
+    }
+    else if(SelectorMode == 1){
+      SelectorMode = 0;
+    }
+  }
+  if(digitalRead(TriggerPin) == HIGH){
+    if(SelectorMode == 0){
+      //fire
+      FireFunction(ModeCount);
+    }
+    else if(SelectorMode == 1){
+      if(ModeCount == 3){
+        ModeCount = 0;
+      }
+      else{
+        ModeCount = ModeCount + 1;
+        delay(500);
+      }
+    }
+  }
+}
+void FireFunction(int FireMode){
+  switch(FireMode){
+    case 0:
+      FireE(Semi);
+      break;
+    case 1:
+      FireE(ThreeBurst);
+      break;
+    case 2:
+      FireE(FiveBurst);
+      break;
+    case 3:
+      FireE(TenBurst);
+      break;
+  }
+}
+void FireE(int FireCount){
+  digitalWrite(FirePin,HIGH);
+  if(digitalRead(PistonSensorPin) == HIGH){
+    if(FireCount_X == FireCount){
+      digitalWrite(FirePin,LOW);
+      FireCount = 0;
+    }
+    else{
+      FireCount = FireCount + 1;
+      delay(20);
+    }
+  }
+}
